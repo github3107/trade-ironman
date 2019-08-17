@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Trade Manager - The Iron Man</title>
+  </head>
+  <body style="margin-left: 10px; margin-right: 10px">
+    <h1> I R O N    M A N Trading System</h1>
+    <hr/>
+    <div id="tradeCount">Current trade count: 0</div>
+    <div id="message" style='color:blue'></div>
+    <hr/>
+    <div>Book/Search a trade:</div>
+    <form id="createTradeForm">
+    <table>
+        <tr>
+            <td>Side: </td>
+            <td><input type="text" id="newTradeSide"/> </td>
+            <td>Qty: </td>
+            <td><input type="text" id="newTradeQty"/>  </td>
+        </tr>
+        
+        <tr>
+                <td>Price: </td>
+                <td><input type="text" id="newTradePrice"/>  </td>
+                <td>TradeDate: </td>
+                <td><input type="text" id="newTradeTradeDate"/>  </td>
+        </tr>
+        <tr>
+                <td>SettleDate: </td>
+                <td><input type="text" id="newTradeSettleDate"/>  </td>
+                <td>Status: </td>
+                <td><input type="text" id="newTradeStatus"/>  </td>
+        </tr>
+        <tr>
+                <td>BookId: </td>
+                <td><input type="text" id="newTradeBookId"/>  </td>
+                <td>AccountId: </td>
+                <td><input type="text" id="newTradeAccountId"/>  </td>
+        </tr>
+        <tr>
+                <td>InstrumentId: </td>
+                <td><input type="text" id="newTradeInstrumentId"/>  </td>
+                <td>SalesPersonId: </td>
+                <td><input type="text" id="newTradeSalesPersonId"/>  </td>
+        </tr>
+        <tr>
+                <td>TraderId: </td>
+                <td><input type="text" id="newTradeTraderId"/>  </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                    <input type="button" value="Create Trade" onclick="createTrade()"/>
+                    <input type="button" value="Search" onclick="searchTrades()"/>
+            </td>
+        </tr>
+    </table>
+    </form>
+    <hr/>
+    <div>
+        For bulk trade booking, enter count: <input type="text" id="newCount"> 
+        <input type="button" value="Create Bulk Trades" onclick="createTrades()"> 
+        <input type="button" value="Delete all" onclick="deleteTrades()"> 
+    </div>
+    
+    <hr/>
+    Trade Details:
+    <div id="currentTrades">
+        <table id="table">
+            <tr>
+                <th>Trade Side</th>
+                <th>Trade Qty</th>
+                <th>Trade Price</th>
+                <th>Trade TradeDate</th>
+                <th>Trade SettleDate</th>
+                <th>Trade Status</th>
+                <th>Trade BookId</th>
+                <th>Trade AccountId</th>
+                <th>Trade InstrumentId</th>
+                <th>Trade SalesPersonId</th>
+                <th>Trade TraderId</th>
+            </tr>
+        </table>
+    </div>
+    <script language="JavaScript">
+        document.getElementById("newTradeTradeDate").value="2019-08-19";
+        document.getElementById("newTradeSettleDate").value="2019-08-21";
+        class Trade{
+            constructor(tradeSide, tradeQty, tradePrice, tradeTradeDate, tradeSettleDate, tradeStatus, tradeBookId, tradeAccountId, tradeInstrumentId, tradeSalesPersonId, tradeTraderId){
+                this.tradeSide=tradeSide;
+                this.tradeQty=tradeQty;
+                this.tradePrice=tradePrice;
+                this.tradeTradeDate=tradeTradeDate;
+                this.tradeSettleDate=tradeSettleDate;
+                this.tradeStatus=tradeStatus;
+                this.tradeBookId=tradeBookId;
+                this.tradeAccountId=tradeAccountId;
+                this.tradeInstrumentId=tradeInstrumentId;
+                this.tradeSalesPersonId=tradeSalesPersonId;
+                this.tradeTraderId=tradeTraderId;
+            }     
+        }
+
+        var id = 100;
+
+        makeRequest('/trades');
+        
+        function makeRequest(target){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                if (xmlhttp.status == 200) {
+                    
+                    //alert(xmlhttp.responseText);
+                    
+                    if(target=='/trades'){
+                        var rowIndex=0;
+                        document.getElementById("currentTrades").innerHTML="";
+                        document.getElementById("currentTrades").innerHTML='<table id="table"> <tr> <th>Trade Side</th> <th>Trade Qty</th> <th>Trade Price</th> <th>TradeDate</th> <th>SettleDate</th> <th>Statustat</th><th>BookId</th> <th>AccountId</th> <th>InstrumentId</th><th>SalesPersonId</th> <th>TraderId</th> </tr>  </table>';
+                        table=document.getElementById('table');
+                        JSON.parse(xmlhttp.responseText).forEach(function(value, index){
+                            var row = table.insertRow(rowIndex+1);
+                            var tradeSide = row.insertCell(0);
+                            var tradeQty = row.insertCell(1);
+                            var tradePrice = row.insertCell(2);
+                            var tradeTradeDate = row.insertCell(3);
+                            var tradeSettleDate = row.insertCell(4);
+                            var tradeStatus = row.insertCell(5);
+                            var tradeBookId = row.insertCell(6);
+                            var tradeAccountId = row.insertCell(7);
+                            var tradeInstrumentId = row.insertCell(8);
+                            var tradeSalesPersonId = row.insertCell(9);
+                            var tradeTraderId = row.insertCell(10);
+
+                            tradeSide.innerHTML=value.tradeSide;
+                            tradeQty.innerHTML=value.tradeQty;
+                            tradePrice.innerHTML=value.tradePrice;
+                            tradeTradeDate.innerHTML=value.tradeTradeDate;
+                            tradeSettleDate.innerHTML=value.tradeSettleDate;
+                            tradeStatus.innerHTML=value.tradeStatus;
+                            tradeBookId.innerHTML=value.tradeBookId;
+                            tradeAccountId.innerHTML=value.tradeAccountId;
+                            tradeInstrumentId.innerHTML=value.tradeInstrumentId;
+                            tradeSalesPersonId.innerHTML=value.tradeSalesPersonId;
+                            tradeTraderId.innerHTML=value.tradeTraderId;
+                            rowIndex=rowIndex+1;
+                        });
+                        document.getElementById('tradeCount').innerHTML='Current trade count: '+rowIndex;
+                    }else{ 
+                        document.getElementById('message').innerHTML=xmlhttp.responseText;
+                        //setMessageTimer();    
+                        if(target=='/createTrade' || target=='/deleteTrades'){
+                            //refresh the display
+                            makeRequest('/trades');        
+                        }           
+                    }
+                }
+                else if (xmlhttp.status == 400) {
+                    alert('There was an error 400');
+                }
+                else {
+                    alert('something else other than 200 was returned');
+                }
+                }
+            };
+
+            if(target=='/trades'){
+                xmlhttp.open("GET", target, true);
+                xmlhttp.send();
+            }else if(target=='/createTrade'){
+                var b = new Trade(document.getElementById("newTradeSide").value, 
+                            document.getElementById("newTradeQty").value, 
+                            document.getElementById("newTradePrice").value,
+                            document.getElementById("newTradeTradeDate").value,
+                            document.getElementById("newTradeSettleDate").value,
+                            document.getElementById("newTradeStatus").value,
+                            document.getElementById("newTradeBookId").value,
+                            document.getElementById("newTradeAccountId").value,
+                            document.getElementById("newTradeInstrumentId").value,
+                            document.getElementById("newTradeSalesPersonId").value,
+                            document.getElementById("newTradeTraderId").value);
+                sendRequest(target, xmlhttp, b);
+            }else if(target=='/createTrades'){
+                var b = new Trade("", "", "", "", "", "", "", "", "", "", "");
+                
+                b.tradeSide="Side"+id;
+                b.tradeQty="Qty"+id;
+                b.tradePrice="Price"+id;
+                b.tradeTradeDate="TradeDate"+id;
+                b.tradeSettleDate="SettleDate"+id;
+                b.tradeStatus="Status"+id;
+                b.tradeBookId="BookId"+id;
+                b.tradeAccountId="AccountId"+id;
+                b.tradeInstrumentId="InstrumentId"+id;
+                b.tradeSalesPersonId="SalesPersonId"+id;
+                b.tradeTraderId="TraderId"+id;
+                id = id+1;
+                sendRequest(target, xmlhttp, b);
+
+            }else if(target=='/searchTrades'){
+                xmlhttp.open("POST", target, true);
+                xmlhttp.send();
+            }else if(target=='/deleteTrades'){
+                xmlhttp.open("POST", target, true);
+                xmlhttp.send();
+            }
+        }
+
+        function sendRequest(target, xmlhttp, trade){
+                xmlhttp.open("POST", target, true);
+                xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xmlhttp.send(JSON.stringify(trade));
+        }
+
+        function createTrade(){
+            makeRequest('/createTrade');
+        }
+
+        function setMessageTimer(){
+            setTimeout(clearMessage, 2000);
+        }
+
+        function createTrades(){
+            var size = parseInt(document.getElementById("newCount").value);
+            for(var i=0; i<size; i++){
+                makeRequest('/createTrades');
+            }            
+        }
+
+        function deleteTrades(){
+            makeRequest('/deleteTrades');
+        }
+
+        function searchTrades(){
+            makeRequest('/searchTrades');
+        }
+
+        function clearMessage(){
+            document.getElementById('message').innerHTML="";
+        }
+
+    </script>
+    <hr/>
+  </body>
+</html>
