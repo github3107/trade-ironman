@@ -58,6 +58,8 @@ app.route('/createTrades').post((req, resp)=>{
             console.log("1 record inserted");
             var query = { }; 
 
+            await sleep(1000);
+
             dbo.collection("trades").find(query).toArray(function(err, result) {
               if (err) throw err;
               console.log(result.length);
@@ -84,6 +86,13 @@ app.route('/deleteTrades').post((req, resp)=>{
 app.route('/searchTrades').post((req, res)=>{
     res.send("Hey, searched trade as requested!");
 });
+
+
+ function sleep(ms){
+     return new Promise(resolve=>{
+         setTimeout(resolve,ms)
+     })
+ }
 
 var server = app.listen(SERVER_PORT, function() {});
 console.log("Ramesh, server started at "+SERVER_PORT);
