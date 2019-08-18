@@ -2,7 +2,24 @@
 <html lang="en">
   <head>
     <title>Trade Manager - The Iron Man</title>
-  </head>
+    <style>
+
+            td{ 
+                padding:7px; border:#4e95f4 1px solid;
+            }
+           tr{
+                background: #b8d1f3;
+            }
+
+            tr:nth-child(odd){ 
+                background: #b8d1f3;
+            }
+
+            tr:nth-child(even){
+		        background: #dae5f4;
+	        }      
+    </style>
+</head>
   <body style="margin-left: 10px; margin-right: 10px">
     <h1> I R O N    M A N Trading System</h1>
     <hr/>
@@ -65,8 +82,9 @@
     <hr/>
     Trade Details:
     <div id="currentTrades">
-        <table id="table">
+        <table id="table" calss="TFtable">
             <tr>
+                <th>Server POD</th>
                 <th>Trade Side</th>
                 <th>Trade Qty</th>
                 <th>Trade Price</th>
@@ -82,6 +100,16 @@
         </table>
     </div>
     <script language="JavaScript">
+
+        var sides = ['Buy', 'Sell'];
+
+        var tradeTypes = ['Govt', 'Corp', 'Mtge', 'Muni'];
+        var accounts = ["5A030a46", "B005", "B007", "5A003440"];
+        var books = ["HBBN", "MD15", "HKKR", "HBDR"];
+        var instruments = ['912828543', '34234234234', '324243234234', '962342344343'];
+        var users = ['Ramesh', 'Raluca', 'Pushkar', 'Vinayak'];
+        var sales = ["6AB", "5KB", "KS8", "AX9", "GVR"];
+
         document.getElementById("newTradeTradeDate").value="2019-08-19";
         document.getElementById("newTradeSettleDate").value="2019-08-21";
         class Trade{
@@ -109,50 +137,42 @@
             xmlhttp.onreadystatechange = function() {
                 if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
                 if (xmlhttp.status == 200) {
-                    
-                    //alert(xmlhttp.responseText);
-                    
-                    if(target=='/trades'){
-                        var rowIndex=0;
-                        document.getElementById("currentTrades").innerHTML="";
-                        document.getElementById("currentTrades").innerHTML='<table id="table"> <tr> <th>Trade Side</th> <th>Trade Qty</th> <th>Trade Price</th> <th>TradeDate</th> <th>SettleDate</th> <th>Statustat</th><th>BookId</th> <th>AccountId</th> <th>InstrumentId</th><th>SalesPersonId</th> <th>TraderId</th> </tr>  </table>';
-                        table=document.getElementById('table');
-                        JSON.parse(xmlhttp.responseText).forEach(function(value, index){
-                            var row = table.insertRow(rowIndex+1);
-                            var tradeSide = row.insertCell(0);
-                            var tradeQty = row.insertCell(1);
-                            var tradePrice = row.insertCell(2);
-                            var tradeTradeDate = row.insertCell(3);
-                            var tradeSettleDate = row.insertCell(4);
-                            var tradeStatus = row.insertCell(5);
-                            var tradeBookId = row.insertCell(6);
-                            var tradeAccountId = row.insertCell(7);
-                            var tradeInstrumentId = row.insertCell(8);
-                            var tradeSalesPersonId = row.insertCell(9);
-                            var tradeTraderId = row.insertCell(10);
+                    var rowIndex=0;
+                    document.getElementById("currentTrades").innerHTML="";
+                    document.getElementById("currentTrades").innerHTML='<table id="table"> <tr> <th>Server POD</th> <th>Trade Side</th> <th>Trade Qty</th> <th>Trade Price</th> <th>TradeDate</th> <th>SettleDate</th> <th>Statustat</th><th>BookId</th> <th>AccountId</th> <th>InstrumentId</th><th>SalesPersonId</th> <th>TraderId</th> </tr>  </table>';
+                    table=document.getElementById('table');
+                    JSON.parse(xmlhttp.responseText).forEach(function(value, index){
+                        var row = table.insertRow(rowIndex+1);
+                        var cellIndex=0;
+                        var tradePodId = row.insertCell(cellIndex++);
+                        var tradeSide = row.insertCell(cellIndex++);
+                        var tradeQty = row.insertCell(cellIndex++);
+                        var tradePrice = row.insertCell(cellIndex++);
+                        var tradeTradeDate = row.insertCell(cellIndex++);
+                        var tradeSettleDate = row.insertCell(cellIndex++);
+                        var tradeStatus = row.insertCell(cellIndex++);
+                        var tradeBookId = row.insertCell(cellIndex++);
+                        var tradeAccountId = row.insertCell(cellIndex++);
+                        var tradeInstrumentId = row.insertCell(cellIndex++);
+                        var tradeSalesPersonId = row.insertCell(cellIndex++);
+                        var tradeTraderId = row.insertCell(cellIndex++);
 
-                            tradeSide.innerHTML=value.tradeSide;
-                            tradeQty.innerHTML=value.tradeQty;
-                            tradePrice.innerHTML=value.tradePrice;
-                            tradeTradeDate.innerHTML=value.tradeTradeDate;
-                            tradeSettleDate.innerHTML=value.tradeSettleDate;
-                            tradeStatus.innerHTML=value.tradeStatus;
-                            tradeBookId.innerHTML=value.tradeBookId;
-                            tradeAccountId.innerHTML=value.tradeAccountId;
-                            tradeInstrumentId.innerHTML=value.tradeInstrumentId;
-                            tradeSalesPersonId.innerHTML=value.tradeSalesPersonId;
-                            tradeTraderId.innerHTML=value.tradeTraderId;
-                            rowIndex=rowIndex+1;
-                        });
-                        document.getElementById('tradeCount').innerHTML='Current trade count: '+rowIndex;
-                    }else{ 
-                        document.getElementById('message').innerHTML=xmlhttp.responseText;
-                        //setMessageTimer();    
-                        if(target=='/createTrade' || target=='/deleteTrades'){
-                            //refresh the display
-                            makeRequest('/trades');        
-                        }           
-                    }
+                        tradePodId.innerHTML=value.tradePodId;
+                        tradeSide.innerHTML=value.tradeSide;
+                        tradeQty.innerHTML=value.tradeQty;
+                        tradePrice.innerHTML=value.tradePrice;
+                        tradeTradeDate.innerHTML=value.tradeTradeDate;
+                        tradeSettleDate.innerHTML=value.tradeSettleDate;
+                        tradeStatus.innerHTML=value.tradeStatus;
+                        tradeBookId.innerHTML=value.tradeBookId;
+                        tradeAccountId.innerHTML=value.tradeAccountId;
+                        tradeInstrumentId.innerHTML=value.tradeInstrumentId;
+                        tradeSalesPersonId.innerHTML=value.tradeSalesPersonId;
+                        tradeTraderId.innerHTML=value.tradeTraderId;
+                        rowIndex=rowIndex+1;
+                    });
+                    document.getElementById('tradeCount').innerHTML='Current trade count: '+rowIndex;
+                    
                 }
                 else if (xmlhttp.status == 400) {
                     alert('There was an error 400');
@@ -182,17 +202,17 @@
             }else if(target=='/createTrades'){
                 var b = new Trade("", "", "", "", "", "", "", "", "", "", "");
                 
-                b.tradeSide="Side"+id;
-                b.tradeQty="Qty"+id;
-                b.tradePrice="Price"+id;
-                b.tradeTradeDate="TradeDate"+id;
-                b.tradeSettleDate="SettleDate"+id;
-                b.tradeStatus="Status"+id;
-                b.tradeBookId="BookId"+id;
-                b.tradeAccountId="AccountId"+id;
-                b.tradeInstrumentId="InstrumentId"+id;
-                b.tradeSalesPersonId="SalesPersonId"+id;
-                b.tradeTraderId="TraderId"+id;
+                b.tradeSide=sides[Math.floor(Math.random() * sides.length)];;
+                b.tradeQty=Math.floor(Math.random() * 100000);;
+                b.tradePrice=Math.floor(Math.random() * 100);;
+                b.tradeTradeDate="2019-08-19";
+                b.tradeSettleDate="2019-08-21";
+                b.tradeStatus="New";
+                b.tradeBookId=books[Math.floor(Math.random() * books.length)];
+                b.tradeAccountId=accounts[Math.floor(Math.random() * accounts.length)];
+                b.tradeInstrumentId=instruments[Math.floor(Math.random() * instruments.length)];
+                b.tradeSalesPersonId=sales[Math.floor(Math.random() * sales.length)];
+                b.tradeTraderId=users[Math.floor(Math.random() * users.length)];
                 id = id+1;
                 sendRequest(target, xmlhttp, b);
 
@@ -219,11 +239,22 @@
             setTimeout(clearMessage, 2000);
         }
 
+        var bulkIntervalObject = null;
+        var bulkSize = 0;
+
         function createTrades(){
-            var size = parseInt(document.getElementById("newCount").value);
-            for(var i=0; i<size; i++){
+            bulkSize = parseInt(document.getElementById("newCount").value);
+            bulkIntervalObject = setInterval(bulkCaller, 100);
+           
+        }
+
+        function bulkCaller(){
+            if(bulkSize>0){
+                bulkSize=bulkSize-1;
                 makeRequest('/createTrades');
-            }            
+            }else{
+                clearInterval(bulkIntervalObject);
+            }
         }
 
         function deleteTrades(){
